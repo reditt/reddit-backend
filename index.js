@@ -16,6 +16,6 @@ app.use("/api", userRouter);
 
 app.get("/", (req, res) => res.send("message" + process.env.Name));
 
-app.listen(8080, () => {
+app.listen(process.env.PORT || 8080, () => {
   console.log("listening on 8080");
 });

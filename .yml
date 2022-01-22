@@ -1,0 +1,2 @@
+- name: Heroku Build Logs
+  uses: mheap/github-action-heroku-logs@v1
