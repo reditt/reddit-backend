@@ -12,7 +12,7 @@ app.use(bodyParser.json());
 
 // app.use("/api", userRouter);
 
-db.sequelize.sync();
+// db.sequelize.sync();
 
 app.get("/", (req, res) => res.send("message" + process.env.Name));
 

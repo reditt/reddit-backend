@@ -23,7 +23,7 @@ const sequelize = new Sequelize(dbConfig.DB, dbConfig.user, dbConfig.PASSWORD, {
   define: {
     timestamps: true,
   },
-  ssl: false,
+  ssl: true,
 });
 
 let db = {};
