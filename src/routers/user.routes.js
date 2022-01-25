@@ -20,7 +20,7 @@ router.get("/private", validateToken, validateUser, (req, res) =>
 );
 router.get("/username", validateToken, validateUser, checkUserName);
 router.put("/user", validateToken, validateUser, updateUser);
-router.get("/forgotPassword", validateToken, validateUser, forgotPassword);
+router.post("/forgotPassword", forgotPassword);
 router.put("/resetpassword", validateToken, validateUser, resetPassword);
 
 module.exports = router;

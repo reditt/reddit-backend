@@ -120,12 +120,20 @@ exports.updateUser = async (req, res) => {
 
 exports.forgotPassword = async (req, res) => {
   try {
-    let token = jwt.sign({ id: req.user.id }, process.env.JWT_SECRET, {
+    let user = await db.User.findOne({
+      where: {
+        email: req.body.email,
+      },
+    });
+    if (!user) {
+      return res.status(400).json({ error: "user does not exist" });
+    }
+    let token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, {
       expiresIn: 300,
     });
     await transporter.sendMail({
       from: "investorkenwilliams@gmail.com",
-      to: req.user.email,
+      to: user.email,
       subject: "Forgot Password",
       html: mailTemplate(token),
     });
