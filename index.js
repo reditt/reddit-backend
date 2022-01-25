@@ -14,7 +14,7 @@ app.use("/api", userRouter);
 
 db.sequelize.sync();
 
-app.get("/", (req, res) => res.send("message" + process.env.Name));
+app.get("/", (req, res) => res.send("message new" + process.env.Name));
 
 app.listen(process.env.PORT || 8080, () => {
   console.log("listening on 8080");

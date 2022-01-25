@@ -24,6 +24,11 @@ module.exports = (sequelize, Sequelize) => {
         type: DataTypes.STRING,
         defaultValue: null,
       },
+      userName: {
+        type: DataTypes.STRING,
+        defaultValue: null,
+        unique: true,
+      },
     },
     {
       hooks: {
