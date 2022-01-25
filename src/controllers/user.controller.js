@@ -1,18 +1,43 @@
 const db = require("../config/db.config");
 const jwt = require("jsonwebtoken");
+const { User } = require("../config/db.config");
 require("dotenv").config();
+const nodemailer = require("nodemailer");
+const { mailTemplate } = require("../static/mail");
+
+const transporter = nodemailer.createTransport({
+  // host: "smtp.ethereal.email",
+  // port: 587,
+  // secure: false,
+  service: "gmail",
+  auth: {
+    user: "investorkenwilliams@gmail.com",
+    pass: "Leo@1234", // generated ethereal password
+  },
+});
 
 exports.signUp = async (req, res) => {
   try {
+    let input = req.body;
     let user = await db.User.findOne({
       where: {
-        email: req.body.email,
+        email: input.email,
       },
     });
     if (user) {
       return res.status(400).json({ error: "email already exists" });
     }
-    let data = await db.User.create(req.body);
+    const oldUser = await db.User.findAll({
+      where: {
+        name: input.name,
+      },
+    });
+    let userName = input.name.replace(/ /g, "_");
+    if (oldUser?.length) {
+      userName = userName + oldUser.length;
+    }
+    input.userName = userName;
+    let data = await db.User.create(input);
     const token = jwt.sign(
       { id: data.id, email: data.email },
       process.env.JWT_SECRET
@@ -48,5 +73,82 @@ exports.signIn = async (req, res) => {
       .json({ message: "Successfully signedIn", token, user });
   } catch (error) {
     res.status(400).json({ error: "something went wrong" + error });
+  }
+};
+
+exports.checkUserName = async (req, res) => {
+  try {
+    const user = await db.User.findOne({
+      where: {
+        userName: req.query.userName,
+      },
+    });
+    if (user) {
+      return res.status(200).json({ error: "user name already used" });
+    } else {
+      return res.status(200).json({ message: "user name available" });
+    }
+  } catch (error) {
+    return res.status(400).json({ message: "something went wrong " + error });
+  }
+};
+
+exports.updateUser = async (req, res) => {
+  try {
+    let input = req.body;
+    if (req.user.id !== input.id) {
+      return res.status(401).json({ error: "Unauthorized  access" });
+    }
+    const user = await db.User.findOne({
+      where: {
+        userName: input.userName,
+      },
+    });
+    if (user && user.id !== req.user.id) {
+      return res.status(401).json({ error: "user name already in use" });
+    }
+    const result = await req.user.update(input, {
+      where: {
+        id: req.user.id,
+      },
+    });
+    res.status(200).json(input);
+  } catch (error) {
+    return res.status(400).json({ message: "something went wrong " + error });
+  }
+};
+
+exports.forgotPassword = async (req, res) => {
+  try {
+    let token = jwt.sign({ id: req.user.id }, process.env.JWT_SECRET, {
+      expiresIn: 300,
+    });
+    await transporter.sendMail({
+      from: "investorkenwilliams@gmail.com",
+      to: req.user.email,
+      subject: "Forgot Password",
+      html: mailTemplate(token),
+    });
+    return res.status(200).json({ message: "mail sent " });
+  } catch (error) {
+    return res.status(400).json({ error: "something went wrong " + error });
+  }
+};
+
+exports.resetPassword = async (req, res) => {
+  try {
+    const result = req.user.update(
+      {
+        encryptedPassword: req.body.encryptedPassword,
+      },
+      {
+        where: {
+          id: req.user.id,
+        },
+      }
+    );
+    return res.status(200).json({ message: "Password updated successfully" });
+  } catch (error) {
+    return res.status(400).json({ error: "something went wrong " + error });
   }
 };

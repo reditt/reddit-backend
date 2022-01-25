@@ -4,6 +4,8 @@ const bodyParser = require("body-parser");
 const userRouter = require("./src/routers/user.routes");
 const db = require("./src/config/db.config");
 require("./src/config/db.config");
+const { Umzug, SequelizeStorage } = require("umzug");
+
 const app = express();
 require("dotenv").config();
 
@@ -12,10 +14,19 @@ app.use(bodyParser.json());
 
 app.use("/api", userRouter);
 
-db.sequelize.sync();
+// db.sequelize.sync();
 
-app.get("/", (req, res) => res.send("message new" + process.env.Name));
+app.get("/", (req, res) => res.send("message seq new" + process.env.Name));
 
-app.listen(process.env.PORT || 8080, () => {
-  console.log("listening on 8080");
+const umzug = new Umzug({
+  migrations: { glob: "migrations/*.js" },
+  context: db.sequelize.getQueryInterface(),
+  storage: new SequelizeStorage({ sequelize: db.sequelize }),
+  logger: console,
+});
+
+umzug.up().then(() => {
+  app.listen(process.env.PORT || 8080, () => {
+    console.log("listening on 8080");
+  });
 });
