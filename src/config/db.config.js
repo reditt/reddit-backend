@@ -23,12 +23,12 @@ const sequelize = new Sequelize(dbConfig.DB, dbConfig.user, dbConfig.PASSWORD, {
   define: {
     timestamps: true,
   },
-  // dialectOptions: {
-  //   ssl: {
-  //     require: true, // This will help you. But you will see nwe error
-  //     rejectUnauthorized: false, // This line will fix new error
-  //   },
-  // },
+  dialectOptions: {
+    ssl: {
+      require: true, // This will help you. But you will see nwe error
+      rejectUnauthorized: false, // This line will fix new error
+    },
+  },
 });
 
 let db = {};
