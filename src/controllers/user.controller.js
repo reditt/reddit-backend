@@ -42,6 +42,7 @@ exports.signUp = async (req, res) => {
       { id: data.id, email: data.email },
       process.env.JWT_SECRET
     );
+    data.encryptedPassword = undefined;
     return res.status(201).json({ data, token });
   } catch (error) {
     res.status(400).json({ error: "something went wrong" + error });
@@ -68,6 +69,7 @@ exports.signIn = async (req, res) => {
       { id: user.id, email: user.email },
       process.env.JWT_SECRET
     );
+    user.encryptedPassword = undefined;
     return res
       .status(200)
       .json({ message: "Successfully signedIn", token, user });

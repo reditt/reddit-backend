@@ -2,6 +2,7 @@ const express = require("express");
 const cors = require("cors");
 const bodyParser = require("body-parser");
 const userRouter = require("./src/routers/user.routes");
+const communityRouter = require("./src/routers/community.routes");
 const db = require("./src/config/db.config");
 require("./src/config/db.config");
 const { Umzug, SequelizeStorage } = require("umzug");
@@ -13,6 +14,7 @@ app.use(cors("*"));
 app.use(bodyParser.json());
 
 app.use("/api", userRouter);
+app.use("/api", communityRouter);
 
 // db.sequelize.sync();
 

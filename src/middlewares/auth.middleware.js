@@ -12,7 +12,7 @@ exports.validateToken = (req, res, next) => {
     req.userId = decodedToken?.id;
     next();
   } catch (error) {
-    return res.json({ message: "Invalid token" });
+    return res.status(401).json({ message: "Invalid token" });
   }
 };
 
