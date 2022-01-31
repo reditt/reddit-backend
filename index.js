@@ -16,7 +16,7 @@ app.use(bodyParser.json());
 app.use("/api", userRouter);
 app.use("/api", communityRouter);
 
-// db.sequelize.sync();
+db.sequelize.sync();
 
 app.get("/", (req, res) => res.send("message seq new" + process.env.Name));
 
