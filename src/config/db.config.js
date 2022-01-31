@@ -23,12 +23,12 @@ const sequelize = new Sequelize(dbConfig.DB, dbConfig.user, dbConfig.PASSWORD, {
   define: {
     timestamps: true,
   },
-  // dialectOptions: {
-  //   ssl: {
-  //     require: true, // This will help you. But you will see nwe error
-  //     rejectUnauthorized: false, // This line will fix new error
-  //   },
-  // },
+  dialectOptions: {
+    ssl: {
+      require: true, // This will help you. But you will see nwe error
+      rejectUnauthorized: false, // This line will fix new error
+    },
+  },
 });
 
 let db = {};
@@ -39,6 +39,10 @@ db.sequelize = sequelize;
 db.User = require("../models/user.model")(sequelize, Sequelize);
 db.Community = require("../models/community.model")(sequelize, Sequelize);
 db.ApprovedUser = require("../models/approvedUser.model")(sequelize, Sequelize);
+db.CommunityJoin = require("../models/communityJoin.model")(
+  sequelize,
+  Sequelize
+);
 
 db.User.hasMany(db.Community, {
   foreignKey: "adminId",
@@ -65,6 +69,24 @@ db.Community.hasMany(db.ApprovedUser, {
 db.ApprovedUser.belongsTo(db.Community, {
   foreignKey: "communityId",
   as: "community",
+});
+
+db.User.hasMany(db.CommunityJoin, {
+  foreignKey: "userId",
+  as: "join_user",
+});
+db.CommunityJoin.belongsTo(db.User, {
+  foreignKey: "userId",
+  as: "join_user",
+});
+
+db.Community.hasMany(db.CommunityJoin, {
+  foreignKey: "communityId",
+  as: "join_community",
+});
+db.CommunityJoin.belongsTo(db.Community, {
+  foreignKey: "communityId",
+  as: "join_community",
 });
 
 module.exports = db;
