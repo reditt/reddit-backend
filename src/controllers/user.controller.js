@@ -162,3 +162,22 @@ exports.resetPassword = async (req, res) => {
     return res.status(400).json({ error: "something went wrong " + error });
   }
 };
+
+exports.getUserById = async (req, res, next, id) => {
+  try {
+    const user = await db.User.findOne({
+      attributes: { exclude: ["encryptedPassword"] },
+      where: {
+        id,
+      },
+    });
+    if (user) {
+      req.userData = user;
+      next();
+    } else {
+      return res.status(401).json({ message: "Invalid user" });
+    }
+  } catch (error) {
+    return res.status(400).json({ error: "something went wrong " + error });
+  }
+};
