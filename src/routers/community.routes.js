@@ -23,18 +23,18 @@ router.get(
   checkCommunityName
 );
 
-router.param("communityId", getCommunityByID);
-router.get("/community/:communityId", (req, res) =>
+router.param("communityName", getCommunityByID);
+router.get("/community/:communityName", (req, res) =>
   res.status(200).json({ data: req.community })
 );
 router.get(
-  "/community/:communityId/join",
+  "/community/:communityName/join",
   validateToken,
   validateUser,
   joinCommunity
 );
 router.delete(
-  "/community/:communityId/join",
+  "/community/:communityName/join",
   validateToken,
   validateUser,
   leaveCommunity

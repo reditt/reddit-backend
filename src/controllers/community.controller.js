@@ -62,7 +62,7 @@ exports.getCommunityByID = async (req, res, next, id) => {
   try {
     const community = await db.Community.findOne({
       where: {
-        id,
+        name: id,
       },
     });
     if (community) {
