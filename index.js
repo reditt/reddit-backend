@@ -21,7 +21,9 @@ db.sequelize.sync();
 app.get("/", (req, res) => res.send("message seq new" + process.env.Name));
 
 const umzug = new Umzug({
-  migrations: { glob: "migrations/*.js" },
+  migrations: {
+    glob: "migrations/*.js",
+  },
   context: db.sequelize.getQueryInterface(),
   storage: new SequelizeStorage({ sequelize: db.sequelize }),
   logger: console,

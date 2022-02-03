@@ -7,6 +7,7 @@ const {
   resetPassword,
   forgotPassword,
   getUserById,
+  userJoins,
 } = require("../controllers/user.controller");
 const {
   validateToken,
@@ -32,5 +33,7 @@ router.get("/user", validateToken, validateUser, (req, res) =>
 router.get("/user/:userId", validateToken, validateUser, (req, res) =>
   res.status(200).json({ user: req.userData })
 );
+
+router.get("/joins", validateToken, validateUser, userJoins);
 
 module.exports = router;

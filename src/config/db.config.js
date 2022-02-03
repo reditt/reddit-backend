@@ -38,7 +38,6 @@ db.sequelize = sequelize;
 
 db.User = require("../models/user.model")(sequelize, Sequelize);
 db.Community = require("../models/community.model")(sequelize, Sequelize);
-db.ApprovedUser = require("../models/approvedUser.model")(sequelize, Sequelize);
 db.CommunityJoin = require("../models/communityJoin.model")(
   sequelize,
   Sequelize
@@ -51,24 +50,6 @@ db.User.hasMany(db.Community, {
 db.Community.belongsTo(db.User, {
   foreignKey: "adminId",
   as: "admin",
-});
-
-db.User.hasMany(db.ApprovedUser, {
-  foreignKey: "userId",
-  as: "user",
-});
-db.ApprovedUser.belongsTo(db.User, {
-  foreignKey: "userId",
-  as: "user",
-});
-
-db.Community.hasMany(db.ApprovedUser, {
-  foreignKey: "communityId",
-  as: "community",
-});
-db.ApprovedUser.belongsTo(db.Community, {
-  foreignKey: "communityId",
-  as: "community",
 });
 
 db.User.hasMany(db.CommunityJoin, {

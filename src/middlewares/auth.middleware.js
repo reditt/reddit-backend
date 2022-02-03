@@ -30,5 +30,9 @@ exports.validateUser = async (req, res, next) => {
     } else {
       return res.status(401).json({ message: "Invalid user" });
     }
-  } catch (error) {}
+  } catch (error) {
+    return res
+      .status(400)
+      .json({ error: "something went wrong middleware" + error });
+  }
 };

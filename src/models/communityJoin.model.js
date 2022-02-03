@@ -10,6 +10,10 @@ module.exports = (sequelize, Sequelize) => {
       type: DataTypes.INTEGER,
       defaultValue: null,
     },
+    approved: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
+    },
   });
   return communityJoin;
 };

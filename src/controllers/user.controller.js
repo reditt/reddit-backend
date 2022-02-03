@@ -181,3 +181,24 @@ exports.getUserById = async (req, res, next, id) => {
     return res.status(400).json({ error: "something went wrong " + error });
   }
 };
+
+exports.userJoins = async (req, res) => {
+  try {
+    const joins = await db.CommunityJoin.findAll({
+      where: {
+        userId: req.user.id,
+      },
+      attributes: [],
+      include: [
+        {
+          model: db.Community,
+          as: "join_community",
+          attributes: { exclude: ["createdAt", "updatedAt", "adminId"] },
+        },
+      ],
+    });
+    return res.status(200).json({ data: joins });
+  } catch (error) {
+    return res.status(400).json({ error: "something went wrong " + error });
+  }
+};
